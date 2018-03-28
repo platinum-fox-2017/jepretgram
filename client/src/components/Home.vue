@@ -15,6 +15,9 @@
           <p class="card-text">{{ post.user.email}}{{ post.user.name}}</p>
         </div>
         <div class="card-body">
+          <button type="button" class="btn btn-outline-success">{{ post.likes.length}} people like this</button>
+        </div>
+        <div class="card-body">
           <button class="card-link btn btn-primary">Like This</button>
         </div>
       </div>

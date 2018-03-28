@@ -6,4 +6,4 @@ const likePostSchema = new Schema({
   post:  { type: Schema.Types.ObjectId, ref: 'Post' },
 })
 
-module.exports= mongoose.model('LikePhoto', likePostSchema)
+module.exports= mongoose.model('LikePost', likePostSchema)

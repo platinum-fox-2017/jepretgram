@@ -23,6 +23,10 @@ const store = new Vuex.Store({
       state.posts = payload
     },
     myPostState (state, payload) {
+      payload.map(data => {
+        data.isEdit = false
+        return data
+      })
       state.myPosts = payload
     },
     loadingState (state, payload) {
