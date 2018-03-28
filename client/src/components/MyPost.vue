@@ -2,7 +2,7 @@
   <div >
     <h1 class="text-center">The Best of Me</h1>
     <div class="row">
-      <div class="col-md-4 offset-md-4">
+      <div class="col-md-6 offset-md-3">
         <spinner v-if="loading" message="Loading Posts.." ></spinner>
         <div class="card"  :key="index" v-for="(post, index) in myPosts">
           <img class="card-img-top" :src="post.photo" alt="Card image cap">
