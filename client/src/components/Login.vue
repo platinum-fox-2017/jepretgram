@@ -15,6 +15,7 @@
         </div>
         <button type="button"  @click="saveForm" class="btn btn-primary">Submit</button>
       </form>
+      <p id="emailHelp" class="form-text text-muted">Don't have account? <router-link :to="{ name: 'Register'}">Register</router-link>.</p>
     </div>
   </div>
 </template>

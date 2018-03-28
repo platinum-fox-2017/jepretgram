@@ -20,14 +20,18 @@ const store = new Vuex.Store({
       state.isLogin = payload
     },
     postState (state, payload) {
-      state.posts = payload
+      payload.map(data => {
+        data.comment = ''
+        return data
+      })
+      state.posts = payload.reverse()
     },
     myPostState (state, payload) {
       payload.map(data => {
         data.isEdit = false
         return data
       })
-      state.myPosts = payload
+      state.myPosts = payload.reverse()
     },
     loadingState (state, payload) {
       state.loading = payload

@@ -16,4 +16,13 @@ postSchema.virtual('likes', {
   justOne: false
 });
 
+postSchema.virtual('comments', {
+  ref: 'Comment', // The model to use
+  localField: '_id', // Find people where `localField`
+  foreignField: 'post', // is equal to `foreignField`
+  // If `justOne` is true, 'members' will be a single doc as opposed to
+  // an array. `justOne` is false by default.
+  justOne: false
+});
+
 module.exports = mongoose.model('post', postSchema)

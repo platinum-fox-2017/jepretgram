@@ -3,7 +3,7 @@ const LikePost = require('../models/likePost')
 
 module.exports = {
   myPost (req, res) {
-    Post.find({user: req.user._id}).populate('user').populate('likes').exec(function (err, data) {
+    Post.find({user: req.user._id}).populate('user').populate('comments').populate('likes').exec(function (err, data) {
       if(err) return res.status(500).json({ message: err })
       return res.status(200).json({
         message: "Success Read My Post",
@@ -12,7 +12,7 @@ module.exports = {
     })
   },
   index (req, res) {
-    Post.find({}).populate('user').populate('likes').exec(function (err, data) {
+    Post.find({}).populate('user').populate('likes').populate({path: 'comments',populate: {path: 'user'}}).exec(function (err, data) {
       if(err) return res.status(500).json({ message: err })
       return res.status(200).json({
         message: "Success Read All Post",
@@ -46,23 +46,33 @@ module.exports = {
     const user = req.user._id
     const id = req.params.id
     const post = id
-    LikePost.findOne({user, post}).exec(function (err, data) {
+    Post.findOne({_id: req.params.id, user: user}).exec(function (err, data) {
       if(err) return res.status(500).json({ message: err })
       if (data) {
-        LikePost.findOneAndRemove({_id: data._id}, function (err, data) {
-          if(err) return res.status(500).json({ message: err })
-          return res.status(200).json({
-            message: "Success Unlike a Post",
-            data
-          })
+        return res.status(200).json({
+          message: "Cannot Like your own photo",
+          data
         })
       } else {
-        LikePost.create({ user, post}, function (err, data) {
+        LikePost.findOne({user, post}).exec(function (err, data) {
           if(err) return res.status(500).json({ message: err })
-          return res.status(200).json({
-            message: "Success Like a Post",
-            data
-          })
+          if (data) {
+            LikePost.findOneAndRemove({_id: data._id}, function (err, data) {
+              if(err) return res.status(500).json({ message: err })
+              return res.status(200).json({
+                message: "Success Unlike a Post",
+                data
+              })
+            })
+          } else {
+            LikePost.create({ user, post}, function (err, data) {
+              if(err) return res.status(500).json({ message: err })
+              return res.status(200).json({
+                message: "Success Like a Post",
+                data
+              })
+            })
+          }
         })
       }
     })
