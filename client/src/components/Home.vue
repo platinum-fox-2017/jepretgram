@@ -11,7 +11,7 @@
           </div>
           <div class="card-body">
             <p class="card-title"><b>{{ post.user.name}}</b> {{ post.caption}}</p>
-            <p class="card-text" v-for="(com, index) in post.comments"><b>{{ com.user.name }}</b> {{ com.comment }}</p>
+            <p class="card-text" v-for="(com, index) in post.comments" :key="index"><b>{{ com.user.name }}</b> {{ com.comment }}</p>
           </div>
           <div class="card-body">
             <input type="text" class="form-control" v-model="post.comment" placeholder="Give Comment Here">
@@ -42,7 +42,7 @@ export default {
       const app = this
       if (localStorage.token) {
         this.$http.post(`/comments/`, {post: id, comment}, {headers: {token: localStorage.token}}).then(res => {
-            app.getPosts()
+          app.getPosts()
         }).catch(err => console.log(err))
       } else {
         this.$router.push('/login')

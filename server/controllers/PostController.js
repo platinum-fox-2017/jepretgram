@@ -3,7 +3,7 @@ const LikePost = require('../models/likePost')
 
 module.exports = {
   myPost (req, res) {
-    Post.find({user: req.user._id}).populate('user').populate('comments').populate('likes').exec(function (err, data) {
+    Post.find({user: req.user._id}).populate('user').populate({path: 'comments',populate: {path: 'user'}}).populate('likes').exec(function (err, data) {
       if(err) return res.status(500).json({ message: err })
       return res.status(200).json({
         message: "Success Read My Post",

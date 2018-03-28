@@ -7,12 +7,12 @@
         <div class="card"  :key="index" v-for="(post, index) in myPosts">
           <img class="card-img-top" :src="post.photo" alt="Card image cap">
           <div class="card-body">
-            <p class="card-title" v-if="!post.isEdit">{{ post.caption}}</p>
-            <input type="text" class="card-title form-control" v-model="post.caption" name="" value="" v-if="post.isEdit">
-            <p class="card-text">{{ post.user.email}}{{ post.user.name}}</p>
+            <button type="button" class="btn btn-outline-success">{{ post.likes.length}} people like this</button>
           </div>
           <div class="card-body">
-            <button type="button" class="btn btn-outline-success">{{ post.likes.length}} people like this</button>
+            <p class="card-title" v-if="!post.isEdit"><b>{{ post.user.name}}</b> {{ post.caption}}</p>
+            <input type="text" class="card-title form-control" v-model="post.caption" name="" value="" v-if="post.isEdit">
+            <p class="card-text" v-for="(com, index) in post.comments" :key="index"><b>{{ com.user.name}}</b>{{ com.comment}}</p>
           </div>
           <div class="card-body">
             <button v-if="!post.isEdit" class=" btn btn-danger" @click="deletePost(post._id)">Delete</button>
