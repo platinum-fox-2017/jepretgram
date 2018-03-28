@@ -1,4 +1,12 @@
 # Jepretgram - A simple photo sharing app
+
+## PREVIEW
+![preview](https://raw.githubusercontent.com/eksant/jepretgram/master/client/src/assets/preview-jepretgram.png  "Preview")
+
+## LIVE-DEMO
+[http://jepretgram.seorangeksa.com](http://jepretgram.seorangeksa.com)
+
+
 Pada ujian akhir phase kali ini kita akan menguji dan melihat hasil dari pembelajaran yang kita lakukan selama phase 2 ini.
 
 Kamu akan diminta untuk membuat sebuah web app sederhana yang nantinya berfungsi sebagai situs mini social media yang mirip seperti Instagram, dimana setiap user nantinya dapat mendaftar dan juga membagikan/mengupload sebuah photo beserta caption ke web app tersebut.
