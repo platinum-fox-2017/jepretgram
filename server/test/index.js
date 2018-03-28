@@ -3,9 +3,11 @@ const expect = chai.expect;
 const chaiHttp = require('chai-http');
 const app = require('../app.js');
 const faker = require('faker')
+const fs = require('fs')
 
 chai.use(chaiHttp);
 var token
+var otherToken
 var name = faker.name.findName()
 var email = faker.internet.email()
 
@@ -22,6 +24,20 @@ describe('User Signin and Register', () => {
            expect(res.body.message).to.equal('Success Register New User');
            expect(res.body).to.have.property('token');
            token = res.body.token
+           done();
+        })
+    })
+    it('Should Register other user for like post feature', function(done) {
+      chai.request(app)
+        .post('/users/register')
+        .send({ email: faker.name.findName(), name: faker.internet.email(), password: 'rahasia' })
+        .end(function(err, res) {
+           expect(res).to.have.status(200);
+           expect(res).to.be.json;
+           expect(res.body).to.have.property('message');
+           expect(res.body.message).to.equal('Success Register New User');
+           expect(res.body).to.have.property('token');
+           otherToken = res.body.token
            done();
         })
     })
@@ -72,7 +88,8 @@ describe('Post Management', function() {
     chai.request(app)
       .post('/posts')
       .set('token', token)
-      .send({ photo: faker.image.imageUrl(), caption: faker.lorem.paragraph() })
+      .field({caption: faker.lorem.paragraph() })
+      .attach('photo', fs.readFileSync('static/iphone.jpg'), 'iphone.jpg')
       .end(function(err, res) {
          expect(res).to.have.status(201);
          expect(res).to.be.json;
@@ -80,13 +97,15 @@ describe('Post Management', function() {
          expect(res.body.message).to.equal('Success Add new Post');
          expect(res.body).to.have.property('data');
          postId = res.body.data._id
-         done();
       })
+      this.timeout(3000); // A very long environment setup.
+      setTimeout(done, 2500);
   })
   it('Should Give error when create new Post without auth', function(done) {
     chai.request(app)
       .post('/posts')
-      .send({ photo: faker.image.imageUrl(), caption: faker.lorem.paragraph() })
+      .field({caption: faker.lorem.paragraph() })
+      .attach('photo', fs.readFileSync('static/iphone.jpg'), 'iphone.jpg')
       .end(function(err, res) {
          expect(res).to.have.status(403);
          expect(res).to.be.json;
@@ -94,12 +113,14 @@ describe('Post Management', function() {
          expect(res.body.message).to.equal('Invalid Token');
          done();
       })
+      this.timeout(3000); // A very long environment setup.
+      setTimeout(done, 2500);
   })
   it('Should Update Post', function(done) {
     chai.request(app)
       .put(`/posts/${postId}`)
       .set('token', token)
-      .send({ photo: faker.image.imageUrl(), caption: faker.lorem.paragraph() })
+      .send({ caption: faker.lorem.paragraph() })
       .end(function(err, res) {
          expect(res).to.have.status(200);
          expect(res).to.be.json;
@@ -112,7 +133,7 @@ describe('Post Management', function() {
   it('Should Give error when update a Post without auth', function(done) {
     chai.request(app)
       .put(`/posts/${postId}`)
-      .send({ photo: faker.image.imageUrl(), caption: faker.lorem.paragraph() })
+      .send({ caption: faker.lorem.paragraph() })
       .end(function(err, res) {
          expect(res).to.have.status(403);
          expect(res).to.be.json;
@@ -121,10 +142,23 @@ describe('Post Management', function() {
          done();
       })
   })
-  it('Should Like Post', function(done) {
+  it('Should cannot Like own Post', function(done) {
     chai.request(app)
       .put(`/posts/${postId}/like`)
       .set('token', token)
+      .end(function(err, res) {
+         expect(res).to.have.status(200);
+         expect(res).to.be.json;
+         expect(res.body).to.have.property('message');
+         expect(res.body.message).to.equal('Cannot Like your own photo');
+         expect(res.body).to.have.property('data');
+         done();
+      })
+  })
+  it('Should Like Post', function(done) {
+    chai.request(app)
+      .put(`/posts/${postId}/like`)
+      .set('token', otherToken)
       .end(function(err, res) {
          expect(res).to.have.status(200);
          expect(res).to.be.json;
@@ -137,7 +171,7 @@ describe('Post Management', function() {
   it('Should Unlike Post', function(done) {
     chai.request(app)
       .put(`/posts/${postId}/like`)
-      .set('token', token)
+      .set('token', otherToken)
       .end(function(err, res) {
          expect(res).to.have.status(200);
          expect(res).to.be.json;
