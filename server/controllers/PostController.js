@@ -6,7 +6,7 @@ module.exports = {
     Post.find({user: req.user._id}).populate('user').exec(function (err, data) {
       if(err) return res.status(500).json({ message: err })
       return res.status(200).json({
-        message: "Success Read All Post",
+        message: "Success Read My Post",
         data
       })
     })
@@ -30,8 +30,9 @@ module.exports = {
     })
   },
   create (req, res) {
-    const { photo, caption } = req.body
+    const { caption } = req.body
     const user = req.user._id
+    const photo =  req.file.cloudStoragePublicUrl
     const input = { photo, caption, user }
     Post.create(input, function (err, data) {
       if (err) return res.status(500).json({message: err})
