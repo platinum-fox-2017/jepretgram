@@ -5,6 +5,9 @@ import axios from 'axios'
 // Use Notify
 
 let host = 'http://localhost:3000'
+if (location.hostname !== 'localhost') {
+  host = 'http://jepretgram-api.geekosta.com'
+}
 const request = axios.create({ baseURL: host })
 
 Vue.use(Vuex)

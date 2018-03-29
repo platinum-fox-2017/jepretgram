@@ -8,7 +8,11 @@ import store from './store'
 import Spinner from 'vue-simple-spinner'
 
 Vue.component('spinner', Spinner)
-Vue.prototype.$http = axios.create({baseURL: 'http://localhost:3000'})
+let host = 'http://localhost:3000'
+if (location.hostname !== 'localhost') {
+  host = 'http://jepretgram-api.geekosta.com'
+}
+Vue.prototype.$http = axios.create({baseURL: host})
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
